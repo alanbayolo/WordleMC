@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model":  "wordlemod:block/wordle_block"}
+  }
+}
