@@ -48,11 +48,13 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
 
     //public ArrayList<String> word = new ArrayList<String>(5);
     public String [] word = new String[5];
+    public String [] wordCollection = new String[30];
     public int letterCounter = 0;
     public int newletter = 0;
     public String [] wordOfTheDay = {"h","e","l","l","o"};
     public int state = 0;
     public int check = 0;
+    public int row = 0;
 
     public WordleScreen(WordleMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -133,10 +135,43 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
             RenderSystem.setShaderTexture(0, D );
             this.blit(pPoseStack, this.leftPos + 55, this.topPos  + 32,0,0,20,20,20,20);
         }*/
-        for(int g = 0;g< word.length;++g){
-            if(word[g] != null){
+        for(int g = 0;g< wordCollection.length;++g){
+            if(wordCollection[g] != null){
                 int xloc = positions[g][0];
                 int yloc = positions[g][1];
+                /*if(state == 1){
+                    RenderSystem.setShaderTexture(0, correct);
+                    this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                }else if(state == 2){
+                    RenderSystem.setShaderTexture(0, wrong);
+                    this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                }*/
+                /*if(check == 1){*/
+                    if(wordCollection[g].equals(wordOfTheDay[g])){
+                        RenderSystem.setShaderTexture(0, correct);
+                        this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                    }else if(!(wordCollection[g].equals(wordOfTheDay[g]))){
+                        if(contains(wordOfTheDay,word[g])){
+                            RenderSystem.setShaderTexture(0, mid);
+                            this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+                        }else{
+                            RenderSystem.setShaderTexture(0, wrong);
+                            this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+                        }
+                    }
+                /*}*/
+                String letter = wordCollection[g];
+                RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
+                this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+            }
+        }
+        for(int g = 0;g< word.length;++g){
+            if(word[g] != null){
+                int xloc = positions[g + (row * 5)][0];
+                int yloc = positions[g + (row * 5)][1];
                 /*if(state == 1){
                     RenderSystem.setShaderTexture(0, correct);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
@@ -162,30 +197,11 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                     }
                 }
                 String letter = word[g];
-                /*System.out.println(letter);
-                System.out.println("String value of: "+  abc.get(letter));*/
                 RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
                 this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
             }
         }
-        /*if(newletter != 0){
-            for(int g = 0;g< word.length;++g){
-                if(word[g] != null){
-                    String letter = word[g];
-                    System.out.println(letter);
-                    System.out.println("String value of: "+  abc.get(letter));
-                    RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
-                    int xloc = positions[g][0];
-                    int yloc = positions[g][1];
-                    this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
-                }
-            }
-            newletter = 0;
-        }*/
     }
-    /*public void textureDrawer(){
-
-    }*/
     public int[][] textureSlotsGenerator(int x, int y){
         int[][] twoDIntArray = new int[30][2];
         int accumulator = 0;
@@ -306,10 +322,23 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                 letterCounter -= 1;
             }
         }
-        if (typedChar == '2'){
+        if (typedChar == '2'){//add the criteria of needing at least 5 letters with function null counter
             System.out.println("Verifying");
-            check = 1;
+            //check = 1;
             verifier();
+            if(row != 0){
+                System.arraycopy(word, 0, wordCollection, 5, word.length);
+                word = new String[word.length];
+                row += 1;
+            }else if(row == 0){
+                System.arraycopy(word, 0, wordCollection, 0, word.length);
+                word = new String[word.length];
+                row += 1;
+            }
+            //send to wordCollection
+            /*System.arraycopy(word, 0, wordCollection, 0, word.length);
+            word = new String[word.length];*/
+            letterCounter = 0;
         }
 
         super.charTyped(typedChar, keyCode);
