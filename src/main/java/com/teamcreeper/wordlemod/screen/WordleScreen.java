@@ -52,6 +52,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     public int newletter = 0;
     public String [] wordOfTheDay = {"h","e","l","l","o"};
     public int state = 0;
+    public int check = 0;
 
     public WordleScreen(WordleMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -118,7 +119,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
             if(word[g] != null){
                 int xloc = positions[g][0];
                 int yloc = positions[g][1];
-                if(state == 1){
+                /*if(state == 1){
                     RenderSystem.setShaderTexture(0, correct);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
@@ -126,6 +127,18 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                     RenderSystem.setShaderTexture(0, wrong);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
+                }*/
+                if(check == 1){
+                    if(word[g].equals(wordOfTheDay[g])){
+                        RenderSystem.setShaderTexture(0, correct);
+                        this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                    }
+                    if(!(word[g].equals(wordOfTheDay[g]))){
+                        RenderSystem.setShaderTexture(0, wrong);
+                        this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                    }
                 }
                 String letter = word[g];
                 /*System.out.println(letter);
@@ -259,6 +272,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
             System.out.println("delete");
             deleteLastLetter();
             state = 0;
+            check = 0;
             if(letterCounter == 0){
 
             }else {
@@ -267,10 +281,14 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
         }
         if (typedChar == '2'){
             System.out.println("Verifying");
+            check = 1;
             verifier();
         }
 
         super.charTyped(typedChar, keyCode);
         return true;
     }
+    //check each letter individually
+    //make a function that check the amount of times that each letter appears in the word
+    //check for the position and trigger the colors
 }
