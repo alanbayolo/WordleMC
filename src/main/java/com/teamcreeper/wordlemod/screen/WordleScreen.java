@@ -80,9 +80,27 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
         put("c", String.valueOf(C));
         put("d", String.valueOf(D));
         put("e", String.valueOf(E));
+        put("f", String.valueOf(F));
+        put("g", String.valueOf(G));
         put("h", String.valueOf(H));
+        put("i", String.valueOf(I));
+        put("j", String.valueOf(J));
+        put("k", String.valueOf(K));
         put("l", String.valueOf(L));
+        put("m", String.valueOf(M));
+        put("n", String.valueOf(N));
         put("o", String.valueOf(O));
+        put("p", String.valueOf(P));
+        put("q", String.valueOf(Q));
+        put("r", String.valueOf(R));
+        put("s", String.valueOf(S));
+        put("t", String.valueOf(T));
+        put("u", String.valueOf(U));
+        put("v", String.valueOf(V));
+        put("w", String.valueOf(W));
+        put("x", String.valueOf(X));
+        put("y", String.valueOf(Y));
+        put("z", String.valueOf(Z));
     }};
 
     @Override
@@ -133,11 +151,14 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                         RenderSystem.setShaderTexture(0, correct);
                         this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
-                    }
-                    if(!(word[g].equals(wordOfTheDay[g]))){
-                        RenderSystem.setShaderTexture(0, wrong);
-                        this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
-
+                    }else if(!(word[g].equals(wordOfTheDay[g]))){
+                        if(contains(wordOfTheDay,word[g])){
+                            RenderSystem.setShaderTexture(0, mid);
+                            this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+                        }else{
+                            RenderSystem.setShaderTexture(0, wrong);
+                            this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+                        }
                     }
                 }
                 String letter = word[g];
@@ -187,6 +208,21 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
 
     }
 
+    public static <T> boolean contains(final T[] array, final T v) {
+        if (v == null) {
+            for (final T e : array)
+                if (e == null)
+                    return true;
+        }
+        else {
+            for (final T e : array)
+                if (e == v || v.equals(e))
+                    return true;
+        }
+
+        return false;
+    }
+
     public static boolean checkEquality(String[] s1, String[] s2)
     {
         if (s1 == s2) {
@@ -223,6 +259,10 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
         }
     }
 
+    public void howManyTimes(){
+
+    }
+
     public void deleteLastLetter(){
         for (int t = word.length - 1; t >= 0; t--) {
             if (word[t] != null) {
@@ -241,33 +281,20 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     @Override
     public boolean charTyped(char typedChar, int keyCode){
         //Pausing the game
-        if (typedChar == 'a' || typedChar == 'b' || typedChar == 'c' || typedChar == 'd' || typedChar == 'e' || typedChar == 'h' || typedChar == 'l' || typedChar == 'o'){
-            word[letterCounter]= String.valueOf(typedChar);
-            newletter = 1;
+        if (typedChar == 'a' || typedChar == 'b' || typedChar == 'c' || typedChar == 'd' || typedChar == 'e' ||
+                typedChar == 'f' || typedChar == 'g' || typedChar == 'h' || typedChar == 'i' || typedChar == 'j' ||
+                typedChar == 'k' || typedChar == 'l' || typedChar == 'm' || typedChar == 'n' || typedChar == 'o' ||
+                typedChar == 'p' || typedChar == 'q' || typedChar == 'r' || typedChar == 's' || typedChar == 't' ||
+                typedChar == 'u' || typedChar == 'v' || typedChar == 'w' || typedChar == 'x' || typedChar == 'y' || typedChar == 'z'){
+
+            //newletter = 1;
             if(letterCounter == 5){
 
-            }else {
+            }else if(letterCounter < 5){
+                word[letterCounter]= String.valueOf(typedChar);
                 letterCounter += 1;
             }
         }
-        /*if (typedChar == 'a' || typedChar == 'A'){
-            word[letterCounter]= String.valueOf(typedChar);
-            newletter = 1;
-            letterCounter += 1;
-            a = 1;
-        }
-        if (typedChar == 'b' || typedChar == 'B'){
-            b = 1;
-        }
-        if (typedChar == 'c' || typedChar == 'C'){
-            c = 1;
-        }
-        if (typedChar == 'd' || typedChar == 'D'){
-            d = 1;
-        }
-        if (typedChar == 'e' || typedChar == 'E'){
-            e = 1;
-        }*/
         if (typedChar == '1'){
             System.out.println("delete");
             deleteLastLetter();
