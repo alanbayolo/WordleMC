@@ -50,6 +50,8 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     public String [] word = new String[5];
     public int letterCounter = 0;
     public int newletter = 0;
+    public String [] wordOfTheDay = {"h","e","l","l","o"};
+    public int state = 0;
 
     public WordleScreen(WordleMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -77,6 +79,9 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
         put("c", String.valueOf(C));
         put("d", String.valueOf(D));
         put("e", String.valueOf(E));
+        put("h", String.valueOf(H));
+        put("l", String.valueOf(L));
+        put("o", String.valueOf(O));
     }};
 
     @Override
@@ -111,12 +116,21 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
         }*/
         for(int g = 0;g< word.length;++g){
             if(word[g] != null){
-                String letter = word[g];
-                System.out.println(letter);
-                System.out.println("String value of: "+  abc.get(letter));
-                RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
                 int xloc = positions[g][0];
                 int yloc = positions[g][1];
+                if(state == 1){
+                    RenderSystem.setShaderTexture(0, correct);
+                    this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                }else if(state == 2){
+                    RenderSystem.setShaderTexture(0, wrong);
+                    this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                }
+                String letter = word[g];
+                /*System.out.println(letter);
+                System.out.println("String value of: "+  abc.get(letter));*/
+                RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
                 this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
             }
         }
@@ -160,6 +174,50 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
 
     }
 
+    public static boolean checkEquality(String[] s1, String[] s2)
+    {
+        if (s1 == s2) {
+            return true;
+        }
+
+        if (s1 == null || s2 == null) {
+            return false;
+        }
+
+        int n = s1.length;
+        if (n != s2.length) {
+            return false;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            if (!s1[i].equals(s2[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void verifier(){
+        if (checkEquality(word, wordOfTheDay)) {
+            System.out.println("Correct");
+            state = 1;
+        }
+        else {
+            System.out.println("Incorrect");
+            state = 2;
+        }
+    }
+
+    public void deleteLastLetter(){
+        for (int t = word.length - 1; t >= 0; t--) {
+            if (word[t] != null) {
+                word[t] = null;
+                break;
+            }
+        }
+    }
     //logic for adding the letters to an array every time a key is pressed 6x5
     //after entering the array it generates an object of letter
     //the object is then displayed
@@ -170,11 +228,14 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     @Override
     public boolean charTyped(char typedChar, int keyCode){
         //Pausing the game
-        if (typedChar == 'a' || typedChar == 'b' || typedChar == 'c' || typedChar == 'd' || typedChar == 'e'){
+        if (typedChar == 'a' || typedChar == 'b' || typedChar == 'c' || typedChar == 'd' || typedChar == 'e' || typedChar == 'h' || typedChar == 'l' || typedChar == 'o'){
             word[letterCounter]= String.valueOf(typedChar);
             newletter = 1;
-            letterCounter += 1;
-            a = 1;
+            if(letterCounter == 5){
+
+            }else {
+                letterCounter += 1;
+            }
         }
         /*if (typedChar == 'a' || typedChar == 'A'){
             word[letterCounter]= String.valueOf(typedChar);
@@ -195,7 +256,18 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
             e = 1;
         }*/
         if (typedChar == '1'){
-            a = 0;
+            System.out.println("delete");
+            deleteLastLetter();
+            state = 0;
+            if(letterCounter == 0){
+
+            }else {
+                letterCounter -= 1;
+            }
+        }
+        if (typedChar == '2'){
+            System.out.println("Verifying");
+            verifier();
         }
 
         super.charTyped(typedChar, keyCode);
