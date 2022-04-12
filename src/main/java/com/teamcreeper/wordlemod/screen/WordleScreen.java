@@ -45,6 +45,10 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     private static final ResourceLocation mid = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/middle.png");
     private static final ResourceLocation correct = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/correct.png");
     private static final ResourceLocation wrong = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/wrong.png");
+    private static final ResourceLocation gameover = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/gameover.png");
+    private static final ResourceLocation win = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/win.png");
+    private static final ResourceLocation gameover2 = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/gameover2.gif");
+    private static final ResourceLocation win2 = new ResourceLocation(WordleMC.MOD_ID, "textures/gui/win2.gif");
 
     //public ArrayList<String> word = new ArrayList<String>(5);
     public String [] word = new String[5];
@@ -172,13 +176,26 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                 String letter = wordCollection[g];
                 RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
                 this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
+
+                if(state == 1){
+                    RenderSystem.setShaderTexture(0, win);
+                    this.blit(pPoseStack,  x + 57, y - 35, 0, 0, 64, 32, 64, 32);
+                    RenderSystem.setShaderTexture(0, win2);
+                    this.blit(pPoseStack, positions[5][0] + 10, positions[5][1], 0, 0, 93, 70, 93, 70);
+
+                }else if(row == 6){
+                    RenderSystem.setShaderTexture(0, gameover);
+                    this.blit(pPoseStack,  x + 57, y - 35, 0, 0, 64, 32, 64, 32);
+                    RenderSystem.setShaderTexture(0, gameover2);
+                    this.blit(pPoseStack,  positions[5][0] - 5, positions[5][1], 0, 0, 126, 70, 126, 70);
+                }
             }
         }
         for(int g = 0;g< word.length;++g){
             if(word[g] != null){
                 int xloc = positions[g + (row * 5)][0];
                 int yloc = positions[g + (row * 5)][1];
-                if(state == 1){
+                /*if(state == 1){
                     RenderSystem.setShaderTexture(0, correct);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
@@ -186,7 +203,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                     RenderSystem.setShaderTexture(0, wrong);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
-                }
+                }*/
                 /*if(check == 1){
                     if(word[g].equals(wordOfTheDay[g])){
                         RenderSystem.setShaderTexture(0, correct);
@@ -335,7 +352,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
             }
             System.out.println(" ");
             //check = 1;
-            //verifier();
+            verifier();
             if(row != 0){
                 System.arraycopy(word, 0, wordCollection, row * 5, word.length);
                 word = new String[word.length];
@@ -358,3 +375,15 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     //make a function that check the amount of times that each letter appears in the word
     //check for the position and trigger the colors
 }
+//add routine stop allowing typing after getting the correct word
+//routine for losing
+//function for selecting a word from the bunch randomly
+//function for getting a dictionary that shows the existing letters and their number of appearances
+/*
+    [[
+        {"h":1},
+        {"e":1},
+        {"l":2},
+        {"o":1}
+    ]];
+ */
