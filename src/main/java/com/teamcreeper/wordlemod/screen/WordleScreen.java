@@ -49,13 +49,13 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     //public ArrayList<String> word = new ArrayList<String>(5);
     public String [] word = new String[5];
     public String [] wordCollection = new String[30];
-    public
     public int letterCounter = 0;
     public int newletter = 0;
     public String [] wordOfTheDay = {"h","e","l","l","o"};
     public int state = 0;
     public int check = 0;
     public int row = 0;
+    public int WOTDcounter = 0;
 
     public WordleScreen(WordleMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -150,11 +150,11 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
 
                 }*/
                 /*if(check == 1){*/
-                    if(wordCollection[g].equals(wordOfTheDay[g])){
+                    if(wordCollection[g].equals(wordOfTheDay[WOTDcounter])){
                         RenderSystem.setShaderTexture(0, correct);
                         this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
-                    }else if(!(wordCollection[g].equals(wordOfTheDay[g]))){
+                    }else if(!(wordCollection[g].equals(wordOfTheDay[WOTDcounter]))){
                         if(contains(wordOfTheDay,wordCollection[g])){
                             RenderSystem.setShaderTexture(0, mid);
                             this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
@@ -162,6 +162,11 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                             RenderSystem.setShaderTexture(0, wrong);
                             this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
                         }
+                    }
+                    if(WOTDcounter < 4){
+                        WOTDcounter += 1;
+                    }else if(WOTDcounter == 4){
+                        WOTDcounter = 0;
                     }
                 /*}*/
                 String letter = wordCollection[g];
