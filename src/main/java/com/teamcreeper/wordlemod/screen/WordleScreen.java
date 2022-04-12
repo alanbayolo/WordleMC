@@ -60,6 +60,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     public int check = 0;
     public int row = 0;
     public int WOTDcounter = 0;
+    public int typingLock = 0;
 
     public WordleScreen(WordleMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -178,12 +179,14 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                 this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
                 if(state == 1){
+                    typingLock = 1;
                     RenderSystem.setShaderTexture(0, win);
                     this.blit(pPoseStack,  x + 57, y - 35, 0, 0, 64, 32, 64, 32);
                     RenderSystem.setShaderTexture(0, win2);
                     this.blit(pPoseStack, positions[5][0] + 10, positions[5][1], 0, 0, 93, 70, 93, 70);
 
                 }else if(row == 6){
+                    typingLock = 1;
                     RenderSystem.setShaderTexture(0, gameover);
                     this.blit(pPoseStack,  x + 57, y - 35, 0, 0, 64, 32, 64, 32);
                     RenderSystem.setShaderTexture(0, gameover2);
@@ -320,63 +323,59 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     @Override
     public boolean charTyped(char typedChar, int keyCode){
         //Pausing the game
-        if (typedChar == 'a' || typedChar == 'b' || typedChar == 'c' || typedChar == 'd' || typedChar == 'e' ||
-                typedChar == 'f' || typedChar == 'g' || typedChar == 'h' || typedChar == 'i' || typedChar == 'j' ||
-                typedChar == 'k' || typedChar == 'l' || typedChar == 'm' || typedChar == 'n' || typedChar == 'o' ||
-                typedChar == 'p' || typedChar == 'q' || typedChar == 'r' || typedChar == 's' || typedChar == 't' ||
-                typedChar == 'u' || typedChar == 'v' || typedChar == 'w' || typedChar == 'x' || typedChar == 'y' || typedChar == 'z'){
+        if(typingLock == 0) {
+            if (typedChar == 'a' || typedChar == 'b' || typedChar == 'c' || typedChar == 'd' || typedChar == 'e' ||
+                    typedChar == 'f' || typedChar == 'g' || typedChar == 'h' || typedChar == 'i' || typedChar == 'j' ||
+                    typedChar == 'k' || typedChar == 'l' || typedChar == 'm' || typedChar == 'n' || typedChar == 'o' ||
+                    typedChar == 'p' || typedChar == 'q' || typedChar == 'r' || typedChar == 's' || typedChar == 't' ||
+                    typedChar == 'u' || typedChar == 'v' || typedChar == 'w' || typedChar == 'x' || typedChar == 'y' || typedChar == 'z') {
 
-            //newletter = 1;
-            if(letterCounter == 5){
+                //newletter = 1;
+                if (letterCounter == 5) {
 
-            }else if(letterCounter < 5){
-                word[letterCounter]= String.valueOf(typedChar);
-                letterCounter += 1;
+                } else if (letterCounter < 5) {
+                    word[letterCounter] = String.valueOf(typedChar);
+                    letterCounter += 1;
+                }
+            }
+            if (typedChar == '1') {
+                System.out.println("delete");
+                deleteLastLetter();
+                state = 0;
+                check = 0;
+                if (letterCounter == 0) {
+
+                } else {
+                    letterCounter -= 1;
+                }
+            }
+            if (typedChar == '2' && letterCounter == 5) {//add the criteria of needing at least 5 letters with function null counter
+                System.out.println("Verifying");
+                for (int j = 0; j < word.length; ++j) {
+                    System.out.print(word[j]);
+                }
+                System.out.println(" ");
+                //check = 1;
+                verifier();
+                if (row != 0) {
+                    System.arraycopy(word, 0, wordCollection, row * 5, word.length);
+                    word = new String[word.length];
+                    row += 1;
+                } else if (row == 0) {
+                    System.arraycopy(word, 0, wordCollection, 0, word.length);
+                    word = new String[word.length];
+                    row += 1;
+                }
+                //send to wordCollection
+                /*System.arraycopy(word, 0, wordCollection, 0, word.length);
+                word = new String[word.length];*/
+                letterCounter = 0;
             }
         }
-        if (typedChar == '1'){
-            System.out.println("delete");
-            deleteLastLetter();
-            state = 0;
-            check = 0;
-            if(letterCounter == 0){
-
-            }else {
-                letterCounter -= 1;
-            }
-        }
-        if (typedChar == '2' && letterCounter==5){//add the criteria of needing at least 5 letters with function null counter
-            System.out.println("Verifying");
-            for(int j = 0; j < word.length; ++j){
-                System.out.print(word[j]);
-            }
-            System.out.println(" ");
-            //check = 1;
-            verifier();
-            if(row != 0){
-                System.arraycopy(word, 0, wordCollection, row * 5, word.length);
-                word = new String[word.length];
-                row += 1;
-            }else if(row == 0){
-                System.arraycopy(word, 0, wordCollection, 0, word.length);
-                word = new String[word.length];
-                row += 1;
-            }
-            //send to wordCollection
-            /*System.arraycopy(word, 0, wordCollection, 0, word.length);
-            word = new String[word.length];*/
-            letterCounter = 0;
-        }
-
-        super.charTyped(typedChar, keyCode);
-        return true;
+            super.charTyped(typedChar, keyCode);
+            return true;
     }
-    //check each letter individually
-    //make a function that check the amount of times that each letter appears in the word
-    //check for the position and trigger the colors
 }
-//add routine stop allowing typing after getting the correct word
-//routine for losing
 //function for selecting a word from the bunch randomly
 //function for getting a dictionary that shows the existing letters and their number of appearances
 /*
