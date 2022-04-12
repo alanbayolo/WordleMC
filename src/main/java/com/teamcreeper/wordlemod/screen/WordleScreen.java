@@ -49,6 +49,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
     //public ArrayList<String> word = new ArrayList<String>(5);
     public String [] word = new String[5];
     public String [] wordCollection = new String[30];
+    public
     public int letterCounter = 0;
     public int newletter = 0;
     public String [] wordOfTheDay = {"h","e","l","l","o"};
@@ -154,7 +155,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                         this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
                     }else if(!(wordCollection[g].equals(wordOfTheDay[g]))){
-                        if(contains(wordOfTheDay,word[g])){
+                        if(contains(wordOfTheDay,wordCollection[g])){
                             RenderSystem.setShaderTexture(0, mid);
                             this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
                         }else{
@@ -172,7 +173,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
             if(word[g] != null){
                 int xloc = positions[g + (row * 5)][0];
                 int yloc = positions[g + (row * 5)][1];
-                /*if(state == 1){
+                if(state == 1){
                     RenderSystem.setShaderTexture(0, correct);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
@@ -180,8 +181,8 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                     RenderSystem.setShaderTexture(0, wrong);
                     this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
 
-                }*/
-                if(check == 1){
+                }
+                /*if(check == 1){
                     if(word[g].equals(wordOfTheDay[g])){
                         RenderSystem.setShaderTexture(0, correct);
                         this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
@@ -195,7 +196,7 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                             this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
                         }
                     }
-                }
+                }*/
                 String letter = word[g];
                 RenderSystem.setShaderTexture(0, ResourceLocation.tryParse(abc.get(letter)));
                 this.blit(pPoseStack, xloc, yloc ,0,0,20,20,20,20);
@@ -322,12 +323,16 @@ public class WordleScreen extends AbstractContainerScreen<WordleMenu> {
                 letterCounter -= 1;
             }
         }
-        if (typedChar == '2'){//add the criteria of needing at least 5 letters with function null counter
+        if (typedChar == '2' && letterCounter==5){//add the criteria of needing at least 5 letters with function null counter
             System.out.println("Verifying");
+            for(int j = 0; j < word.length; ++j){
+                System.out.print(word[j]);
+            }
+            System.out.println(" ");
             //check = 1;
-            verifier();
+            //verifier();
             if(row != 0){
-                System.arraycopy(word, 0, wordCollection, 5, word.length);
+                System.arraycopy(word, 0, wordCollection, row * 5, word.length);
                 word = new String[word.length];
                 row += 1;
             }else if(row == 0){
